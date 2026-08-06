@@ -1,1 +1,0 @@
-CREATE POLICY "Reservations have no direct browser access" ON public.reservations FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
