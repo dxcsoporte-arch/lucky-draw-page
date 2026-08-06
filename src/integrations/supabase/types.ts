@@ -14,174 +14,16 @@ export type Database = {
   }
   public: {
     Tables: {
-      raffle_numbers: {
-        Row: {
-          created_at: string
-          id: string
-          number: number
-          raffle_id: string
-          reservation_id: string | null
-          reserved_until: string | null
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          number: number
-          raffle_id: string
-          reservation_id?: string | null
-          reserved_until?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          number?: number
-          raffle_id?: string
-          reservation_id?: string | null
-          reserved_until?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "raffle_numbers_raffle_id_fkey"
-            columns: ["raffle_id"]
-            isOneToOne: false
-            referencedRelation: "raffles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "raffle_numbers_reservation_fk"
-            columns: ["reservation_id"]
-            isOneToOne: false
-            referencedRelation: "reservations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      raffles: {
-        Row: {
-          created_at: string
-          draw_date: string | null
-          id: string
-          logo_url: string | null
-          name: string
-          prize_description: string
-          prize_image_url: string | null
-          prize_name: string
-          status: string
-          ticket_price: number
-          updated_at: string
-          whatsapp_number: string
-        }
-        Insert: {
-          created_at?: string
-          draw_date?: string | null
-          id?: string
-          logo_url?: string | null
-          name: string
-          prize_description?: string
-          prize_image_url?: string | null
-          prize_name: string
-          status?: string
-          ticket_price: number
-          updated_at?: string
-          whatsapp_number: string
-        }
-        Update: {
-          created_at?: string
-          draw_date?: string | null
-          id?: string
-          logo_url?: string | null
-          name?: string
-          prize_description?: string
-          prize_image_url?: string | null
-          prize_name?: string
-          status?: string
-          ticket_price?: number
-          updated_at?: string
-          whatsapp_number?: string
-        }
-        Relationships: []
-      }
-      reservations: {
-        Row: {
-          created_at: string
-          expires_at: string
-          id: string
-          phone: string
-          raffle_id: string
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          expires_at: string
-          id?: string
-          phone: string
-          raffle_id: string
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          expires_at?: string
-          id?: string
-          phone?: string
-          raffle_id?: string
-          status?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "reservations_raffle_id_fkey"
-            columns: ["raffle_id"]
-            isOneToOne: false
-            referencedRelation: "raffles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_roles: {
-        Row: {
-          created_at: string
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      release_expired_reservations: { Args: never; Returns: number }
-      reserve_raffle_numbers: {
-        Args: { p_numbers: number[]; p_phone: string; p_raffle_id: string }
-        Returns: {
-          expires_at: string
-          reservation_id: string
-        }[]
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "user"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -308,8 +150,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "user"],
-    },
+    Enums: {},
   },
 } as const
