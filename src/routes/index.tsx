@@ -150,6 +150,8 @@ function Index() {
     setMessage("");
     try {
       const result = await reserve({ data: { raffleId: raffle.id, phone, numbers: selected } });
+      warnedRef.current = false;
+      expiredRef.current = false;
       setExpiresAt(result.expires_at);
       setConfirmedReservation({
         id: result.reservation_id,
@@ -159,6 +161,12 @@ function Index() {
         expiresAt: result.expires_at,
       });
       setMessage("¡Apartado confirmado! Tienes 30 minutos para enviar tu comprobante.");
+      toast.success("¡Apartado confirmado!", {
+        description: "Te avisaremos aquí 5 minutos antes de que venza tu apartado.",
+      });
+      if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "default") {
+        void Notification.requestPermission();
+      }
       await router.invalidate();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "No pudimos completar el apartado.");
