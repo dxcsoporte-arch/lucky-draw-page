@@ -31,6 +31,7 @@ type RaffleNumber = { number: number; status: string; reserved_until: string | n
 
 type ConfirmedReservation = {
   id: string;
+  fullName: string;
   phone: string;
   numbers: number[];
   total: number;
@@ -48,6 +49,7 @@ function Index() {
   
   const { raffle, numbers } = initialData;
   const [selected, setSelected] = useState<number[]>([]);
+  const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
@@ -104,13 +106,13 @@ function Index() {
     ? new Intl.DateTimeFormat("es-MX", { day: "numeric", month: "short" }).format(new Date(raffle.draw_date))
     : "Próximamente";
   const contactMessage = selected.length
-    ? `Hola, quiero confirmar mi apartado para ${raffle.name}.\n\nCelular: ${phone || "Por registrar"}\nNúmeros: ${selected.map(formatNumber).join(", ")}\nCantidad: ${selected.length}\nTotal: $${total.toLocaleString("es-MX")} MXN.`
+    ? `Hola, quiero confirmar mi apartado para ${raffle.name}.\n\nNombre: ${fullName || "Por registrar"}\nCelular: ${phone || "Por registrar"}\nNúmeros: ${selected.map(formatNumber).join(", ")}\nCantidad: ${selected.length}\nTotal: $${total.toLocaleString("es-MX")} MXN.`
     : `Hola, quiero información sobre la rifa ${raffle.name}.`;
   const whatsappUrl = createWhatsAppUrl(raffle.whatsapp_number, contactMessage);
   const confirmedWhatsAppUrl = confirmedReservation
     ? createWhatsAppUrl(
         raffle.whatsapp_number,
-        `Hola, quiero confirmar mi apartado para ${raffle.name}.\n\nFolio: ${confirmedReservation.id}\nCelular: ${confirmedReservation.phone}\nNúmeros: ${confirmedReservation.numbers.map(formatNumber).join(", ")}\nCantidad: ${confirmedReservation.numbers.length}\nTotal: $${confirmedReservation.total.toLocaleString("es-MX")} MXN\nVence: ${new Intl.DateTimeFormat("es-MX", { dateStyle: "short", timeStyle: "short" }).format(new Date(confirmedReservation.expiresAt))}.\n\nAdjunto mi comprobante de pago.`,
+        `Hola, quiero confirmar mi apartado para ${raffle.name}.\n\nFolio: ${confirmedReservation.id}\nNombre: ${confirmedReservation.fullName}\nCelular: ${confirmedReservation.phone}\nNúmeros: ${confirmedReservation.numbers.map(formatNumber).join(", ")}\nCantidad: ${confirmedReservation.numbers.length}\nTotal: $${confirmedReservation.total.toLocaleString("es-MX")} MXN\nVence: ${new Intl.DateTimeFormat("es-MX", { dateStyle: "short", timeStyle: "short" }).format(new Date(confirmedReservation.expiresAt))}.\n\nAdjunto mi comprobante de pago.`,
       )
     : whatsappUrl;
 
@@ -145,6 +147,7 @@ function Index() {
   const submitReservation = async () => {
     if (!selected.length) return setMessage("Selecciona al menos un número.");
     if (selected.length > 20) return setMessage("Solo puedes apartar un máximo de 20 números.");
+    if (fullName.trim().split(/\s+/).filter(Boolean).length < 2) return setMessage("Escribe tu nombre completo y apellido.");
     if (!/^[1-9][0-9]{9,14}$/.test(phone)) return setMessage("Ingresa tu celular con lada, usando solo números.");
     setWorking(true);
     setMessage("");
@@ -155,6 +158,7 @@ function Index() {
       setExpiresAt(result.expires_at);
       setConfirmedReservation({
         id: result.reservation_id,
+        fullName: fullName.trim(),
         phone,
         numbers: [...selected],
         total,
@@ -183,6 +187,7 @@ function Index() {
         raffleName: raffle.name,
         logoUrl: brandLogo.url,
         reservationId: confirmedReservation.id,
+        fullName: confirmedReservation.fullName,
         phone: confirmedReservation.phone,
         numbers: confirmedReservation.numbers,
         total: confirmedReservation.total,
@@ -252,7 +257,7 @@ function Index() {
           <div className="mt-10 rounded-lg bg-foreground p-6 text-background sm:p-8">
             <div className="grid items-end gap-5 lg:grid-cols-[1fr_280px_auto]">
               <div><p className="text-xs font-extrabold uppercase opacity-60">Tus números</p><p className="mt-1 min-h-8 font-display text-2xl">{selected.length ? selected.map(formatNumber).join(" · ") : "AÚN NO HAS ELEGIDO"}</p><p className="mt-2 text-sm opacity-70">{selected.length} boleto(s) · Total ${total.toLocaleString("es-MX")} MXN</p></div>
-              <label className="block"><span className="mb-2 block text-xs font-extrabold uppercase opacity-60">Celular con lada</span><input value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 15))} inputMode="tel" placeholder="521234567890" className="h-12 w-full rounded-lg border border-background/20 bg-background/10 px-4 text-background outline-none placeholder:text-background/40 focus:ring-2 focus:ring-accent" /></label>
+              <label className="block"><span className="mb-2 block text-xs font-extrabold uppercase opacity-60">Nombre completo y apellido</span><input value={fullName} onChange={(e) => setFullName(e.target.value.slice(0, 60))} placeholder="Juan Pérez López" className="mb-4 h-12 w-full rounded-lg border border-background/20 bg-background/10 px-4 text-background outline-none placeholder:text-background/40 focus:ring-2 focus:ring-accent" /><span className="mb-2 block text-xs font-extrabold uppercase opacity-60">Celular con lada</span><input value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 15))} inputMode="tel" placeholder="521234567890" className="h-12 w-full rounded-lg border border-background/20 bg-background/10 px-4 text-background outline-none placeholder:text-background/40 focus:ring-2 focus:ring-accent" /></label>
               <ActionButton tone="accent" className="h-12 px-7" disabled={working} onClick={submitReservation}><TicketCheck className="size-5" />{working ? "Apartando…" : "Apartar ahora"}</ActionButton>
             </div>
             {message && <p role="status" className="mt-4 rounded-lg bg-background/10 px-4 py-3 text-sm">{message}</p>}
