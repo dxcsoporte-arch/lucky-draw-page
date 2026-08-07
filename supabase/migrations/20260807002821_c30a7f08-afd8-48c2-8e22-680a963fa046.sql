@@ -1,0 +1,1 @@
+UPDATE public.raffles SET whatsapp_number = '5216681906701';
