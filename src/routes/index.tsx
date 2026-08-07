@@ -1,7 +1,8 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Clock3, MessageCircle, Search, ShieldCheck, TicketCheck } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 import brandLogo from "@/assets/billetazo-lm-logo.png.asset.json";
 import prizeImage from "@/assets/rifa-10000-pesos.png.asset.json";
 import { ActionButton } from "@/components/ActionButton";
@@ -55,6 +56,8 @@ function Index() {
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [remaining, setRemaining] = useState(1800);
   const [confirmedReservation, setConfirmedReservation] = useState<ConfirmedReservation | null>(null);
+  const warnedRef = useRef(false);
+  const expiredRef = useRef(false);
 
   useEffect(() => {
     if (!expiresAt) return;
@@ -63,6 +66,37 @@ function Index() {
     const timer = window.setInterval(update, 1000);
     return () => window.clearInterval(timer);
   }, [expiresAt]);
+
+  useEffect(() => {
+    if (!expiresAt) return;
+    const notify = (title: string, body: string) => {
+      if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
+        new Notification(title, { body });
+      }
+    };
+    if (remaining > 0 && remaining <= 300 && !warnedRef.current) {
+      warnedRef.current = true;
+      const minutes = Math.max(1, Math.ceil(remaining / 60));
+      toast.warning("Tu apartado está por vencer", {
+        description: `Te quedan menos de ${minutes} minuto(s) para enviar tu comprobante por WhatsApp.`,
+        duration: 10000,
+      });
+      notify("Tu apartado está por vencer", `Te quedan menos de ${minutes} minuto(s) para enviar tu comprobante.`);
+    }
+    if (remaining === 0 && !expiredRef.current) {
+      expiredRef.current = true;
+      toast.error("Tu apartado expiró", {
+        description: "Tus números se liberaron. Puedes volver a elegirlos si siguen disponibles.",
+        duration: 12000,
+      });
+      notify("Tu apartado expiró", "Tus números se liberaron y vuelven a estar disponibles.");
+      setConfirmedReservation(null);
+      setExpiresAt(null);
+      setSelected([]);
+      void router.invalidate();
+    }
+  }, [remaining, expiresAt, router]);
+
 
   const statusByNumber = useMemo(() => new Map(numbers.map((item: RaffleNumber) => [item.number, item.status])), [numbers]);
   const total = selected.length * raffle.ticket_price;
@@ -116,6 +150,8 @@ function Index() {
     setMessage("");
     try {
       const result = await reserve({ data: { raffleId: raffle.id, phone, numbers: selected } });
+      warnedRef.current = false;
+      expiredRef.current = false;
       setExpiresAt(result.expires_at);
       setConfirmedReservation({
         id: result.reservation_id,
@@ -125,6 +161,12 @@ function Index() {
         expiresAt: result.expires_at,
       });
       setMessage("¡Apartado confirmado! Tienes 30 minutos para enviar tu comprobante.");
+      toast.success("¡Apartado confirmado!", {
+        description: "Te avisaremos aquí 5 minutos antes de que venza tu apartado.",
+      });
+      if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "default") {
+        void Notification.requestPermission();
+      }
       await router.invalidate();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "No pudimos completar el apartado.");
