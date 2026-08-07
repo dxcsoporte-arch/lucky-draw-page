@@ -122,11 +122,11 @@ function Index() {
         return current.filter((item) => item !== number);
       }
       if (current.length >= 10) {
-        setLimitNotice("Has alcanzado el límite de 10 números por apartado. Quita uno para elegir otro.");
+        setLimitNotice("Has alcanzado el límite de 20 números por apartado. Quita uno para elegir otro.");
         return current;
       }
       const next = [...current, number].sort((a, b) => a - b);
-      setLimitNotice(next.length === 10 ? "Has alcanzado el límite de 10 números por apartado." : "");
+      setLimitNotice(next.length === 20 ? "Has alcanzado el límite de 20 números por apartado." : "");
       return next;
     });
   };
@@ -144,7 +144,7 @@ function Index() {
 
   const submitReservation = async () => {
     if (!selected.length) return setMessage("Selecciona al menos un número.");
-    if (selected.length > 10) return setMessage("Solo puedes apartar un máximo de 10 números.");
+    if (selected.length > 20) return setMessage("Solo puedes apartar un máximo de 20 números.");
     if (!/^[1-9][0-9]{9,14}$/.test(phone)) return setMessage("Ingresa tu celular con lada, usando solo números.");
     setWorking(true);
     setMessage("");
@@ -214,12 +214,12 @@ function Index() {
 
         <section id="verificar" className="mb-16 grid gap-6 md:grid-cols-2">
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm"><h2 className="mb-4 flex items-center gap-2 font-extrabold"><Search className="size-5 text-primary" /> Verificar número</h2><div className="flex gap-2"><input value={search} onChange={(e) => setSearch(e.target.value.replace(/\D/g, "").slice(0, 3))} placeholder="000–499" inputMode="numeric" className="min-w-0 flex-1 rounded-lg border border-input bg-muted px-3 outline-none focus:ring-2 focus:ring-ring" /><ActionButton onClick={verifyNumber}>Buscar</ActionButton></div></div>
-          <div className="flex flex-col items-center justify-center rounded-lg bg-primary p-6 text-center text-primary-foreground"><ShieldCheck className="mb-2 size-8" /><p className="text-sm font-extrabold uppercase opacity-80">Apartado seguro</p><p className="font-display text-2xl">La suerte está a un clic</p><p className="mt-1 text-xs opacity-80">Máximo 10 números por apartado.</p></div>
+          <div className="flex flex-col items-center justify-center rounded-lg bg-primary p-6 text-center text-primary-foreground"><ShieldCheck className="mb-2 size-8" /><p className="text-sm font-extrabold uppercase opacity-80">Apartado seguro</p><p className="font-display text-2xl">La suerte está a un clic</p><p className="mt-1 text-xs opacity-80">Máximo 20 números por apartado.</p></div>
         </section>
 
 
         <section id="numeros" className="rounded-lg border border-border bg-card p-4 shadow-sm sm:p-8">
-          <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><h2 className="font-display text-4xl">SELECCIONA TUS NÚMEROS</h2><p className="text-muted-foreground">Haz clic para elegir hasta 10 números de la suerte.</p><p className="mt-2 text-sm font-extrabold text-primary">{selected.length} de 10 seleccionados</p></div><div className="flex flex-wrap gap-4 text-xs font-extrabold uppercase"><span className="flex items-center gap-2"><i className="size-4 rounded border border-border bg-muted" />Disponible</span><span className="flex items-center gap-2"><i className="size-4 rounded bg-accent" />Elegido</span><span className="flex items-center gap-2"><i className="size-4 rounded bg-reserved" />Apartado</span><span className="flex items-center gap-2"><i className="size-4 rounded bg-primary" />Pagado</span></div></div>
+          <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><h2 className="font-display text-4xl">SELECCIONA TUS NÚMEROS</h2><p className="text-muted-foreground">Haz clic para elegir hasta 20 números de la suerte.</p><p className="mt-2 text-sm font-extrabold text-primary">{selected.length} de 20 seleccionados</p></div><div className="flex flex-wrap gap-4 text-xs font-extrabold uppercase"><span className="flex items-center gap-2"><i className="size-4 rounded border border-border bg-muted" />Disponible</span><span className="flex items-center gap-2"><i className="size-4 rounded bg-accent" />Elegido</span><span className="flex items-center gap-2"><i className="size-4 rounded bg-reserved" />Apartado</span><span className="flex items-center gap-2"><i className="size-4 rounded bg-primary" />Pagado</span></div></div>
           {limitNotice && <p role="alert" aria-live="assertive" className="mb-5 rounded-lg border border-accent bg-accent/20 px-4 py-3 text-sm font-extrabold text-accent-foreground">{limitNotice}</p>}
           <div className="grid grid-cols-5 gap-2 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-20">
             {numbers.map((item: RaffleNumber) => {
