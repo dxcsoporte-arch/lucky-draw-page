@@ -235,7 +235,12 @@ function Index() {
             </div>
             {message && <p role="status" className="mt-4 rounded-lg bg-background/10 px-4 py-3 text-sm">{message}</p>}
             {expiresAt && <div className="mt-4 flex items-center gap-2 text-sm text-accent"><Clock3 className="size-4" />Vence en {String(Math.floor(remaining / 60)).padStart(2, "0")}:{String(remaining % 60).padStart(2, "0")}</div>}
-            {confirmedReservation && <a href={confirmedWhatsAppUrl} target="_blank" rel="noreferrer" className="mt-5 flex min-h-14 w-full items-center justify-center gap-3 rounded-lg bg-success px-5 text-center text-sm font-extrabold uppercase text-success-foreground shadow-lg transition-transform active:scale-[0.98] sm:w-fit"><MessageCircle className="size-5 shrink-0" />Contactar por WhatsApp</a>}
+            {confirmedReservation && (
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                <a href={confirmedWhatsAppUrl} target="_blank" rel="noreferrer" className="flex min-h-14 w-full items-center justify-center gap-3 rounded-lg bg-success px-5 text-center text-sm font-extrabold uppercase text-success-foreground shadow-lg transition-transform active:scale-[0.98] sm:w-fit"><MessageCircle className="size-5 shrink-0" />Contactar por WhatsApp</a>
+                <ActionButton tone="accent" className="min-h-14 w-full sm:w-fit" onClick={handleDownloadReceipt}><Download className="size-5 shrink-0" />Descargar comprobante</ActionButton>
+              </div>
+            )}
           </div>
         </section>
       </main>
