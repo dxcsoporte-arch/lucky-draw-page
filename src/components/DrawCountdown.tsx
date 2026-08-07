@@ -26,9 +26,11 @@ export function DrawCountdown({ drawDate }: Props) {
   const target = drawDate ? Date.parse(drawDate) : Number.NaN;
   const valid = Number.isFinite(target);
   const [time, setTime] = useState(() => (valid ? diff(target) : null));
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (!valid) return;
+    setMounted(true);
     setTime(diff(target));
     const timer = window.setInterval(() => setTime(diff(target)), 1000);
     return () => window.clearInterval(timer);
@@ -36,10 +38,13 @@ export function DrawCountdown({ drawDate }: Props) {
 
   if (!valid || !time) return null;
 
-  const fullDate = new Intl.DateTimeFormat("es-MX", {
-    dateStyle: "full",
-    timeStyle: "short",
-  }).format(new Date(target));
+  const fullDate = mounted
+    ? new Intl.DateTimeFormat("es-MX", {
+        dateStyle: "full",
+        timeStyle: "short",
+      }).format(new Date(target))
+    : "";
+
 
   return (
     <section
