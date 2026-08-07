@@ -53,6 +53,7 @@ function Index() {
   const [phone, setPhone] = useState("");
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
+  const [highlighted, setHighlighted] = useState<number | null>(null);
   const [limitNotice, setLimitNotice] = useState("");
   const [working, setWorking] = useState(false);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
@@ -136,11 +137,24 @@ function Index() {
   const verifyNumber = () => {
     const value = Number(search);
     if (!/^\d{1,3}$/.test(search) || value < 0 || value > 499) {
+      setHighlighted(null);
       setMessage("Escribe un número entre 000 y 499.");
       return;
     }
     const state = statusByNumber.get(value);
-    setMessage(`El número ${formatNumber(value)} está ${state === "available" ? "disponible" : state === "reserved" ? "apartado" : "pagado"}.`);
+    if (state === undefined) {
+      setHighlighted(null);
+      setMessage(`El número ${formatNumber(value)} no existe en esta rifa.`);
+      return;
+    }
+    setHighlighted(value);
+    setMessage(
+      state === "available"
+        ? `El número ${formatNumber(value)} está DISPONIBLE. Ya lo marcamos en la cuadrícula.`
+        : state === "reserved"
+          ? `El número ${formatNumber(value)} está APARTADO. Ya lo marcamos en la cuadrícula.`
+          : `El número ${formatNumber(value)} está VENDIDO. Ya lo marcamos en la cuadrícula.`,
+    );
     document.getElementById(`number-${value}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
@@ -251,7 +265,8 @@ function Index() {
           <div className="grid grid-cols-5 gap-2 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-20">
             {numbers.map((item: RaffleNumber) => {
               const chosen = selected.includes(item.number);
-              return <button id={`number-${item.number}`} key={item.number} disabled={item.status !== "available"} onClick={() => toggleNumber(item.number)} aria-label={`Número ${formatNumber(item.number)}, ${chosen ? "elegido" : item.status}`} className={`aspect-square rounded-md border text-xs font-extrabold transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 ${chosen ? "border-accent bg-accent text-accent-foreground ring-2 ring-accent/30" : item.status === "reserved" ? "border-reserved bg-reserved text-foreground" : item.status === "paid" ? "border-primary bg-primary text-primary-foreground" : "border-border bg-muted text-foreground hover:bg-accent/40"}`}>{formatNumber(item.number)}</button>;
+              const isHighlighted = highlighted === item.number;
+              return <button id={`number-${item.number}`} key={item.number} disabled={item.status !== "available"} onClick={() => toggleNumber(item.number)} aria-label={`Número ${formatNumber(item.number)}, ${chosen ? "elegido" : item.status}`} className={`aspect-square rounded-md border text-xs font-extrabold transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 ${isHighlighted ? "scale-110 !opacity-100 outline outline-4 outline-offset-2 outline-foreground animate-pulse" : ""} ${chosen ? "border-accent bg-accent text-accent-foreground ring-2 ring-accent/30" : item.status === "reserved" ? "border-reserved bg-reserved text-foreground" : item.status === "paid" ? "border-primary bg-primary text-primary-foreground" : "border-border bg-muted text-foreground hover:bg-accent/40"}`}>{formatNumber(item.number)}</button>;
             })}
           </div>
           <div className="mt-10 rounded-lg bg-foreground p-6 text-background sm:p-8">
