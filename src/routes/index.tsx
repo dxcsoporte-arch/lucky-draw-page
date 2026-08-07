@@ -55,7 +55,7 @@ function Index() {
   const [lookupResult, setLookupResult] = useState<string>("");
   const [working, setWorking] = useState(false);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
-  const [remaining, setRemaining] = useState(3600);
+  const [remaining, setRemaining] = useState(1800);
   const [confirmedReservation, setConfirmedReservation] = useState<ConfirmedReservation | null>(null);
 
   useEffect(() => {
@@ -126,7 +126,7 @@ function Index() {
         total,
         expiresAt: result.expires_at,
       });
-      setMessage("¡Apartado confirmado! Tienes 60 minutos para enviar tu comprobante.");
+      setMessage("¡Apartado confirmado! Tienes 30 minutos para enviar tu comprobante.");
       await router.invalidate();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "No pudimos completar el apartado.");
@@ -177,15 +177,15 @@ function Index() {
           </div>
           <div className="relative pb-8 lg:pb-0">
             <img src={prizeImage.url} alt="Gran rifa de $10,000 mil pesos en efectivo" width={768} height={960} className="mx-auto aspect-[4/5] w-full max-w-xl rounded-2xl object-contain shadow-2xl" />
-            <div className="absolute bottom-0 right-3 max-w-64 rounded-lg bg-primary p-5 text-primary-foreground shadow-xl lg:-bottom-6 lg:-right-3"><p className="text-xs font-extrabold uppercase opacity-80">Tiempo de apartado</p><p className="font-display text-3xl">60 MINUTOS</p><p className="text-xs">Si no pagas, tus números se liberan.</p></div>
+            <div className="absolute bottom-0 right-3 max-w-64 rounded-lg bg-primary p-5 text-primary-foreground shadow-xl lg:-bottom-6 lg:-right-3"><p className="text-xs font-extrabold uppercase opacity-80">Tiempo de apartado</p><p className="font-display text-3xl">30 MINUTOS</p><p className="text-xs">Si no pagas, tus números se liberan.</p></div>
           </div>
         </section>
 
-        <section id="verificar" className="mb-16 grid gap-6 md:grid-cols-3">
+        <section id="verificar" className="mb-16 grid gap-6 md:grid-cols-2">
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm"><h2 className="mb-4 flex items-center gap-2 font-extrabold"><Search className="size-5 text-primary" /> Verificar número</h2><div className="flex gap-2"><input value={search} onChange={(e) => setSearch(e.target.value.replace(/\D/g, "").slice(0, 3))} placeholder="000–499" inputMode="numeric" className="min-w-0 flex-1 rounded-lg border border-input bg-muted px-3 outline-none focus:ring-2 focus:ring-ring" /><ActionButton onClick={verifyNumber}>Buscar</ActionButton></div></div>
-          <div className="rounded-lg border border-border bg-card p-6 shadow-sm"><h2 className="mb-4 flex items-center gap-2 font-extrabold"><Smartphone className="size-5 text-primary" /> Verificar celular</h2><div className="flex gap-2"><input value={lookupPhone} onChange={(e) => setLookupPhone(e.target.value.replace(/\D/g, "").slice(0, 15))} placeholder="521234567890" inputMode="tel" className="min-w-0 flex-1 rounded-lg border border-input bg-muted px-3 outline-none focus:ring-2 focus:ring-ring" /><ActionButton onClick={checkPhone}>Ver</ActionButton></div>{lookupResult && <p className="mt-3 text-xs text-muted-foreground">{lookupResult}</p>}</div>
           <div className="flex flex-col items-center justify-center rounded-lg bg-primary p-6 text-center text-primary-foreground"><ShieldCheck className="mb-2 size-8" /><p className="text-sm font-extrabold uppercase opacity-80">Apartado seguro</p><p className="font-display text-2xl">La suerte está a un clic</p><p className="mt-1 text-xs opacity-80">Máximo 10 números por apartado.</p></div>
         </section>
+
 
         <section id="numeros" className="rounded-lg border border-border bg-card p-4 shadow-sm sm:p-8">
           <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><h2 className="font-display text-4xl">SELECCIONA TUS NÚMEROS</h2><p className="text-muted-foreground">Haz clic para elegir hasta 10 números de la suerte.</p><p className="mt-2 text-sm font-extrabold text-primary">{selected.length} de 10 seleccionados</p></div><div className="flex flex-wrap gap-4 text-xs font-extrabold uppercase"><span className="flex items-center gap-2"><i className="size-4 rounded border border-border bg-muted" />Disponible</span><span className="flex items-center gap-2"><i className="size-4 rounded bg-accent" />Elegido</span><span className="flex items-center gap-2"><i className="size-4 rounded bg-reserved" />Apartado</span><span className="flex items-center gap-2"><i className="size-4 rounded bg-primary" />Pagado</span></div></div>
