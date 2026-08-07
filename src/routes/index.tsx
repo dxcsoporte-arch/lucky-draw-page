@@ -272,7 +272,7 @@ function Index() {
         </section>
       </main>
 
-      <footer className="mt-16 border-t border-border bg-muted py-10 text-center"><p className="font-display text-2xl text-primary">{raffle.name}</p><p className="mx-auto mt-2 max-w-xl px-4 text-sm text-muted-foreground">Sorteo transparente con 500 números. Conserva tu comprobante y confirma tu pago por WhatsApp.</p></footer>
+      <footer className="mt-16 border-t border-border bg-muted py-10 text-center"><p className="font-display text-2xl text-primary">{raffle.name}</p><p className="mx-auto mt-2 max-w-xl px-4 text-sm text-muted-foreground">Sorteo transparente con 500 números. Conserva tu comprobante y confirma tu pago por WhatsApp.</p><img src={brandLogo.url} alt={`Logotipo de ${raffle.name}`} className="mx-auto mt-6 size-24 rounded-full object-contain" loading="lazy" /></footer>
       <div className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 md:hidden">{confirmedReservation ? <a href={confirmedWhatsAppUrl} target="_blank" rel="noreferrer" className="flex min-h-14 w-full items-center justify-center gap-3 rounded-lg bg-success px-4 text-center font-extrabold uppercase text-success-foreground shadow-2xl"><MessageCircle className="size-5 shrink-0" />Contactar por WhatsApp</a> : <ActionButton onClick={submitReservation} disabled={!selected.length || working} className="min-h-14 w-full bg-success text-success-foreground shadow-2xl hover:bg-success"><MessageCircle className="size-5" />Apartar {selected.length ? `${selected.length} número(s)` : "por WhatsApp"}</ActionButton>}</div>
     </div>
   );
