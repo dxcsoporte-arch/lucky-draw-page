@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({ meta: [
-    { title: "Cambiar contraseña | Billetazo LM" },
-    { name: "description", content: "Cambia la contraseña del panel de administración." },
-    { property: "og:title", content: "Cambiar contraseña | Billetazo LM" },
-    { property: "og:description", content: "Recuperación segura del acceso administrador." },
+    { title: "Cambiar contraseña | Billetazolm" },
+    { name: "description", content: "Billetazo LM — Cambiar contraseña" },
+    { property: "og:title", content: "Cambiar contraseña | Billetazolm" },
+    { property: "og:description", content: "Billetazo LM — Cambiar contraseña" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary" },
   ] }),
