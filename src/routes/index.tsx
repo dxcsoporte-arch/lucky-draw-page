@@ -2,7 +2,7 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Clock3, MessageCircle, Search, ShieldCheck, Smartphone, TicketCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import brandLogo from "@/assets/billetazo-lm.png.asset.json";
+import brandLogo from "@/assets/billetazo-lm-logo.png.asset.json";
 import prizeImage from "@/assets/rifa-10000-pesos.png.asset.json";
 import { ActionButton } from "@/components/ActionButton";
 import { createReservation, getRaffle, lookupReservations } from "@/lib/raffle.functions";
