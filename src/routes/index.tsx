@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import brandLogo from "@/assets/billetazo-lm-logo.png.asset.json";
 import prizeImage from "@/assets/rifa-banner.png.asset.json";
 import { ActionButton } from "@/components/ActionButton";
+import { DrawCountdown } from "@/components/DrawCountdown";
 import { createReservation, getRaffle } from "@/lib/raffle.functions";
 
 export const Route = createFileRoute("/")({
@@ -252,6 +253,8 @@ function Index() {
             <div className="absolute bottom-0 right-3 max-w-64 rounded-lg bg-primary p-5 text-primary-foreground shadow-xl lg:-bottom-6 lg:-right-3"><p className="text-xs font-extrabold uppercase opacity-80">Tiempo de apartado</p><p className="font-display text-3xl">30 MINUTOS</p><p className="text-xs">Si no pagas, tus números se liberan.</p></div>
           </div>
         </section>
+
+        <DrawCountdown drawDate={raffle.draw_date} />
 
         <section id="verificar" className="mb-16 grid gap-6 md:grid-cols-2">
           <div className="rounded-lg border border-border bg-card p-6 shadow-sm"><h2 className="mb-4 flex items-center gap-2 font-extrabold"><Search className="size-5 text-primary" /> Verificar número</h2><div className="flex gap-2"><input value={search} onChange={(e) => setSearch(e.target.value.replace(/\D/g, "").slice(0, 3))} placeholder="000–499" inputMode="numeric" className="min-w-0 flex-1 rounded-lg border border-input bg-muted px-3 outline-none focus:ring-2 focus:ring-ring" /><ActionButton onClick={verifyNumber}>Buscar</ActionButton></div></div>
