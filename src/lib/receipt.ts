@@ -2,6 +2,7 @@ type ReceiptData = {
   raffleName: string;
   logoUrl: string;
   reservationId: string;
+  fullName: string;
   phone: string;
   numbers: number[];
   total: number;
@@ -10,7 +11,7 @@ type ReceiptData = {
 };
 
 const W = 900;
-const H = 1200;
+const H = 1320;
 
 function loadImage(src: string) {
   return new Promise<HTMLImageElement | null>((resolve) => {
@@ -65,6 +66,7 @@ export async function downloadReceipt(data: ReceiptData) {
   };
 
   row("Folio de apartado", data.reservationId.slice(0, 8).toUpperCase());
+  row("Nombre completo", data.fullName);
   row("Celular registrado", data.phone);
   row("Boletos apartados", `${data.numbers.length} boleto(s)`);
   row("Precio por boleto", `$${data.ticketPrice.toLocaleString("es-MX")} MXN`);
