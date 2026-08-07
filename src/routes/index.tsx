@@ -56,6 +56,8 @@ function Index() {
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [remaining, setRemaining] = useState(1800);
   const [confirmedReservation, setConfirmedReservation] = useState<ConfirmedReservation | null>(null);
+  const warnedRef = useRef(false);
+  const expiredRef = useRef(false);
 
   useEffect(() => {
     if (!expiresAt) return;
@@ -64,6 +66,37 @@ function Index() {
     const timer = window.setInterval(update, 1000);
     return () => window.clearInterval(timer);
   }, [expiresAt]);
+
+  useEffect(() => {
+    if (!expiresAt) return;
+    const notify = (title: string, body: string) => {
+      if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
+        new Notification(title, { body });
+      }
+    };
+    if (remaining > 0 && remaining <= 300 && !warnedRef.current) {
+      warnedRef.current = true;
+      const minutes = Math.max(1, Math.ceil(remaining / 60));
+      toast.warning("Tu apartado está por vencer", {
+        description: `Te quedan menos de ${minutes} minuto(s) para enviar tu comprobante por WhatsApp.`,
+        duration: 10000,
+      });
+      notify("Tu apartado está por vencer", `Te quedan menos de ${minutes} minuto(s) para enviar tu comprobante.`);
+    }
+    if (remaining === 0 && !expiredRef.current) {
+      expiredRef.current = true;
+      toast.error("Tu apartado expiró", {
+        description: "Tus números se liberaron. Puedes volver a elegirlos si siguen disponibles.",
+        duration: 12000,
+      });
+      notify("Tu apartado expiró", "Tus números se liberaron y vuelven a estar disponibles.");
+      setConfirmedReservation(null);
+      setExpiresAt(null);
+      setSelected([]);
+      void router.invalidate();
+    }
+  }, [remaining, expiresAt, router]);
+
 
   const statusByNumber = useMemo(() => new Map(numbers.map((item: RaffleNumber) => [item.number, item.status])), [numbers]);
   const total = selected.length * raffle.ticket_price;
