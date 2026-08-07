@@ -11,9 +11,9 @@ export const Route = createFileRoute("/")({
   loader: () => getRaffle(),
   head: () => ({
     meta: [
-      { title: "Rifa de 500 números | Rifas La Suerte" },
+      { title: "Rifa de 500 números | Billetazo LM" },
       { name: "description", content: "Elige y aparta tus números para participar en nuestra rifa de 500 boletos." },
-      { property: "og:title", content: "Rifa de 500 números | Rifas La Suerte" },
+      { property: "og:title", content: "Rifa de 500 números | Billetazo LM" },
       { property: "og:description", content: "Elige tus números de la suerte y apártalos por WhatsApp." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
