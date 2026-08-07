@@ -4,7 +4,7 @@ import { Clock3, Download, MessageCircle, Search, ShieldCheck, TicketCheck } fro
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import brandLogo from "@/assets/billetazo-lm-logo.png.asset.json";
-import prizeImage from "@/assets/rifa-10000-pesos.png.asset.json";
+import prizeImage from "@/assets/rifa-banner.png.asset.json";
 import { ActionButton } from "@/components/ActionButton";
 import { createReservation, getRaffle } from "@/lib/raffle.functions";
 
