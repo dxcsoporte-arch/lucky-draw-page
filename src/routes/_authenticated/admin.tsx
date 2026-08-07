@@ -10,10 +10,10 @@ type AdminData = Awaited<ReturnType<typeof getAdminRaffle>>;
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [
-    { title: "Control de boletos | Billetazo LM" },
-    { name: "description", content: "Panel privado para administrar boletos vendidos y apartados." },
-    { property: "og:title", content: "Control de boletos | Billetazo LM" },
-    { property: "og:description", content: "Panel privado de administración de la rifa." },
+    { title: "Control de boletos | Billetazolm" },
+    { name: "description", content: "Billetazo LM — Control de boletos" },
+    { property: "og:title", content: "Control de boletos | Billetazolm" },
+    { property: "og:description", content: "Billetazo LM — Control de boletos" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary" },
   ] }),

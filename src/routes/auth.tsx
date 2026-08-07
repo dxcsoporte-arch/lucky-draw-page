@@ -8,10 +8,10 @@ const ADMIN_EMAIL = "dxcsoporte@gmail.com";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [
-    { title: "Acceso administrador | Billetazo LM" },
-    { name: "description", content: "Acceso privado al panel de administración de Billetazo LM." },
-    { property: "og:title", content: "Acceso administrador | Billetazo LM" },
-    { property: "og:description", content: "Acceso privado al panel de administración." },
+    { title: "Acceso administrador | Billetazolm" },
+    { name: "description", content: "Billetazo LM — Acceso administrador" },
+    { property: "og:title", content: "Acceso administrador | Billetazolm" },
+    { property: "og:description", content: "Billetazo LM — Acceso administrador" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary" },
   ] }),
