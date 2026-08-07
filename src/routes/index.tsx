@@ -53,6 +53,7 @@ function Index() {
   const [phone, setPhone] = useState("");
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
+  const [highlighted, setHighlighted] = useState<number | null>(null);
   const [limitNotice, setLimitNotice] = useState("");
   const [working, setWorking] = useState(false);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
@@ -136,11 +137,24 @@ function Index() {
   const verifyNumber = () => {
     const value = Number(search);
     if (!/^\d{1,3}$/.test(search) || value < 0 || value > 499) {
+      setHighlighted(null);
       setMessage("Escribe un número entre 000 y 499.");
       return;
     }
     const state = statusByNumber.get(value);
-    setMessage(`El número ${formatNumber(value)} está ${state === "available" ? "disponible" : state === "reserved" ? "apartado" : "pagado"}.`);
+    if (state === undefined) {
+      setHighlighted(null);
+      setMessage(`El número ${formatNumber(value)} no existe en esta rifa.`);
+      return;
+    }
+    setHighlighted(value);
+    setMessage(
+      state === "available"
+        ? `El número ${formatNumber(value)} está DISPONIBLE. Ya lo marcamos en la cuadrícula.`
+        : state === "reserved"
+          ? `El número ${formatNumber(value)} está APARTADO. Ya lo marcamos en la cuadrícula.`
+          : `El número ${formatNumber(value)} está VENDIDO. Ya lo marcamos en la cuadrícula.`,
+    );
     document.getElementById(`number-${value}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
