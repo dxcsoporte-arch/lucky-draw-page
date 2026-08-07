@@ -175,6 +175,28 @@ function Index() {
     }
   };
 
+  const handleDownloadReceipt = async () => {
+    if (!confirmedReservation) return;
+    try {
+      const { downloadReceipt } = await import("@/lib/receipt");
+      await downloadReceipt({
+        raffleName: raffle.name,
+        logoUrl: brandLogo.url,
+        reservationId: confirmedReservation.id,
+        phone: confirmedReservation.phone,
+        numbers: confirmedReservation.numbers,
+        total: confirmedReservation.total,
+        expiresAt: confirmedReservation.expiresAt,
+        ticketPrice: Number(raffle.ticket_price),
+      });
+      toast.success("Comprobante descargado", { description: "Guárdalo y envíalo junto con tu pago." });
+    } catch {
+      toast.error("No pudimos generar el comprobante. Intenta de nuevo.");
+    }
+  };
+
+
+
 
   return (
     <div className="min-h-screen bg-background pb-28 text-foreground md:pb-0">
