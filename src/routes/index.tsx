@@ -1,11 +1,11 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { Clock3, MessageCircle, Search, ShieldCheck, Smartphone, TicketCheck } from "lucide-react";
+import { Clock3, MessageCircle, Search, ShieldCheck, TicketCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import brandLogo from "@/assets/billetazo-lm-logo.png.asset.json";
 import prizeImage from "@/assets/rifa-10000-pesos.png.asset.json";
 import { ActionButton } from "@/components/ActionButton";
-import { createReservation, getRaffle, lookupReservations } from "@/lib/raffle.functions";
+import { createReservation, getRaffle } from "@/lib/raffle.functions";
 
 export const Route = createFileRoute("/")({
   loader: () => getRaffle(),
@@ -27,7 +27,7 @@ function formatNumber(value: number) {
 }
 
 type RaffleNumber = { number: number; status: string; reserved_until: string | null };
-type ReservationLookup = { status: string; numbers: number[] };
+
 type ConfirmedReservation = {
   id: string;
   phone: string;
@@ -44,15 +44,13 @@ function Index() {
   const initialData = Route.useLoaderData();
   const router = useRouter();
   const reserve = useServerFn(createReservation);
-  const lookup = useServerFn(lookupReservations);
+  
   const { raffle, numbers } = initialData;
   const [selected, setSelected] = useState<number[]>([]);
   const [phone, setPhone] = useState("");
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [limitNotice, setLimitNotice] = useState("");
-  const [lookupPhone, setLookupPhone] = useState("");
-  const [lookupResult, setLookupResult] = useState<string>("");
   const [working, setWorking] = useState(false);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [remaining, setRemaining] = useState(1800);
@@ -135,15 +133,6 @@ function Index() {
     }
   };
 
-  const checkPhone = async () => {
-    if (!/^[1-9][0-9]{9,14}$/.test(lookupPhone)) return setLookupResult("Ingresa un celular válido con lada.");
-    try {
-      const items = await lookup({ data: { raffleId: raffle.id, phone: lookupPhone } });
-      setLookupResult(items.length ? items.map((item: ReservationLookup) => `${item.status}: ${item.numbers.map(formatNumber).join(", ")}`).join(" · ") : "No encontramos apartados con ese celular.");
-    } catch {
-      setLookupResult("No pudimos consultar tus apartados.");
-    }
-  };
 
   return (
     <div className="min-h-screen bg-background pb-28 text-foreground md:pb-0">
