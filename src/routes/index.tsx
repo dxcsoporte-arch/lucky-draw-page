@@ -1,6 +1,6 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { Clock3, MessageCircle, Search, ShieldCheck, TicketCheck } from "lucide-react";
+import { Clock3, Download, MessageCircle, Search, ShieldCheck, TicketCheck } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import brandLogo from "@/assets/billetazo-lm-logo.png.asset.json";
